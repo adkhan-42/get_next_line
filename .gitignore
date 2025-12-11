@@ -1,0 +1,6 @@
+*.o
+*.out
+gnl
+.DS_Store
+test.txt
+.vscode
