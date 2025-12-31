@@ -38,44 +38,49 @@ t_list *get_node(t_list **head, int fd)
     return(new);
 }
 
-void *gnl_memcpy(void *dest, const void *src,size_t n)
-{
-    size_t i;
-    char *dest1;
-    const char *src1;
-
-    if (!dest || !src)
-        return NULL;
-
-    dest1 = (char *)dest;
-    src1 = (const char *)src;
-    i = 0;
-    while (i < n)
-    {
-        dest1[i] = src1[i];
-        i++;
-    }
-    return (dest);    
-}
-
-
 char *gnl_strjoin(const char *s1,const char *s2)
 {
-    size_t slen1;
-    size_t slen2;
-    size_t tot_len;
     char *res;
+    size_t i;
+    size_t j;
 
-    slen1 = gnl_strlen(s1);
-    slen2 = gnl_strlen(s2);
-    tot_len = slen1 + slen2;
-    res = malloc((tot_len + 1)*(sizeof(char)));
+    if (!s1)
+        s1 = "";
+    if (!s2)
+        s2 = "";
+    res = malloc(gnl_strlen(s1)+gnl_strlen(s2) + 1);
     if (!res)
-        return NULL;
-    gnl_memcpy(res,s1,slen1);
-    gnl_memcpy((res + slen1),s2,slen2);
-    res[slen1 + slen2] = '\0';
-    return (res);
+        return(NULL);
+    i = -1;
+    while(s1[++i])
+        res[i] = s1[i];
+    j = -1;
+    while(s2[++j])
+        res[i+j] = s2[j];
+    res[i+j] = '\0';
+    return(res);
+}
+void remove_node(t_list **head,int fd)
+{
+    t_list *current;
+    t_list *prev;
+
+    current = *head;
+    prev = NULL;
+    while(current)
+    {
+        if (current -> fd == fd)
+        {
+            if (prev)
+                prev -> next = current -> next;
+            else 
+                *head = current -> next;
+            if (current -> content)
+                return(free(current));
+        }
+        prev = current;
+        current = current -> next;
+    }
 }
 
 char *gnl_strchr(const char *s, int c)
