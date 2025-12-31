@@ -23,15 +23,15 @@ int main(void)
     printf("===================================================\n\n");
 
     // Round 1: Read Line 1 from everyone
-    line = get_next_line_bonus(fd1);
+    line = get_next_line(fd1);
     printf("FD %d: [%s]", fd1, line); // Expected: File_1_Line_1
     free(line);
 
-    line = get_next_line_bonus(fd2);
+    line = get_next_line(fd2);
     printf("FD %d: [%s]", fd2, line); // Expected: File_2_Line_1
     free(line);
 
-    line = get_next_line_bonus(fd3);
+    line = get_next_line(fd3);
     printf("FD %d: [%s]", fd3, line); // Expected: File_3_Line_1
     free(line);
     
@@ -39,30 +39,30 @@ int main(void)
 
     // Round 2: Read Line 2 from everyone
     // If your linked list is broken, these will be garbage or mixed up!
-    line = get_next_line_bonus(fd1);
+    line = get_next_line(fd1);
     printf("FD %d: [%s]", fd1, line); // Expected: File_1_Line_2
     free(line);
 
-    line = get_next_line_bonus(fd2);
+    line = get_next_line(fd2);
     printf("FD %d: [%s]", fd2, line); // Expected: File_2_Line_2
     free(line);
 
-    line = get_next_line_bonus(fd3);
+    line = get_next_line(fd3);
     printf("FD %d: [%s]", fd3, line); // Expected: File_3_Line_2
     free(line);
 
     printf("\n--- Context Switch ---\n\n");
 
     // Round 3: Read Line 3 from everyone
-    line = get_next_line_bonus(fd1);
+    line = get_next_line(fd1);
     printf("FD %d: [%s]", fd1, line);
     free(line);
 
-    line = get_next_line_bonus(fd2);
+    line = get_next_line(fd2);
     printf("FD %d: [%s]", fd2, line);
     free(line);
 
-    line = get_next_line_bonus(fd3);
+    line = get_next_line(fd3);
     printf("FD %d: [%s]", fd3, line);
     free(line);
 
@@ -70,6 +70,24 @@ int main(void)
     close(fd1);
     close(fd2);
     close(fd3);
+
+    char *ret;
+    int fd4 = open("file4.txt", O_RDONLY);
+    if (fd4<0)
+    {
+        printf("ERROR BITCH GIVE ME A FILE TO READ NOT THIS BS");
+        return (0);
+    }
+    int count = 0;
+    while ((ret = get_next_line(fd4)) != NULL)
+    {
+
+        printf("%d, The Line is [%s]",count,ret);
+        count++;
+        free(ret);
+    }
+    printf("total lines read = %d\n",count);
+    close (fd4);
 
     return (0);
 }

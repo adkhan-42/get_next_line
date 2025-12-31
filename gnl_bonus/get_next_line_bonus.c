@@ -97,7 +97,7 @@ static char *clean_stash(char *stash)
     return(new_stash);
 }
 
-char *get_next_line_bonus(int fd)
+char *get_next_line(int fd)
 {
     static t_list *head;
     char *line;
@@ -108,13 +108,15 @@ char *get_next_line_bonus(int fd)
     node = get_node(&head,fd);
     if(!node)
         return NULL;
-    printf("DEBUG: Reading...\n");
     node->content = read_from_file(fd, node->content);
     if(!node -> content)
-        return NULL;
-    printf("DEBUG: Extracting...\n");
+        {
+            remove_node(&head,fd);
+            return NULL;
+        }
     line = extract_line(node -> content);
-    printf("DEBUG: Cleaning...\n");
     node->content = clean_stash(node->content);
+    if(!node -> content)
+        remove_node(&head,fd);
     return (line);
 }
